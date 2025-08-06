@@ -59,7 +59,7 @@ op_input:
 op_enqueue:
     STACK_PREPOP
     mov al, [STACK]
-    mov [QUEUE_W], al
+    mov [queue+QUEUE_W], al
     inc QUEUE_W
     and QUEUE_W, ~((~0)<<QUEUE_BITS)
 %if SAFETY
@@ -74,7 +74,7 @@ op_dequeue:
     cmp QUEUE_R, QUEUE_W
     SAFETY_ASSERT safety_queue_underflow
 %endif
-    mov al, [QUEUE_R]
+    mov al, [queue+QUEUE_R]
     inc QUEUE_R
     and QUEUE_R, ~((~0)<<QUEUE_BITS)
     STACK_PREPUSH
