@@ -21,24 +21,24 @@ op_compile:
         cmp al, ';'
         je .l_prepare_end
         ; func ptr
-        mov r8, [instr_func+rax*8]
+        mov rsi, [instr_func+rax*8]
         ; alloc size
         lea rax, [rax*2]
         mov rcx, [instr_info+rax*8]
         ; ret-tail size
-        xor rsi, rsi
+        xor r8, r8
         ; tail offset
         mov r12, [instr_info+rax*8+8]
         ; check if tail is ret
-        mov al, [r8+r12]
+        mov al, [rsi+r12]
         cmp al, 0xc3
         ; remove tail-ret byte
         mov r9, 1
-        cmove rsi, r9
-        sub rcx, rsi
+        cmove r8, r9
+        sub rcx, r8
         ; next
         push r12 ; tail
-        push r8  ; src
+        push rsi  ; src
         push rdi ; dst offset
         push rcx ; size
         add r12, rdi ; newfunc tail offset
@@ -49,8 +49,8 @@ op_compile:
         je .empty_func       
             
         ; add back removed ret-tail
-        add [rsp], rsi
-        add rdi, rsi
+        add [rsp], r8
+        add rdi, r8
 
     ; allocate memory
     push rdi
