@@ -49,10 +49,15 @@ _start:
     mov rbx, rax ; pointer
     mov r12, rdx ; size
 
+    ; ignore newline at end of file
+    cmp byte[rbx+r12-1], 10
+    jne .alloc
+    dec r12
+
+.alloc:
     ; rdi = r12*7+1
     lea rdi, [r12*2+r12]
     lea rdi, [rdi*2+r12+1]
-    push rdi
     call heap_alloc
     mov r9, rax ; newfunc
 
