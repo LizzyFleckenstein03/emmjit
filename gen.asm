@@ -7,7 +7,7 @@ op_0:
 	lea rax, [rax*2+0]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_1:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -15,7 +15,7 @@ op_1:
 	lea rax, [rax*2+1]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_2:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -23,7 +23,7 @@ op_2:
 	lea rax, [rax*2+2]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_3:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -31,7 +31,7 @@ op_3:
 	lea rax, [rax*2+3]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_4:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -39,7 +39,7 @@ op_4:
 	lea rax, [rax*2+4]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_5:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -47,7 +47,7 @@ op_5:
 	lea rax, [rax*2+5]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_6:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -55,7 +55,7 @@ op_6:
 	lea rax, [rax*2+6]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_7:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -63,7 +63,7 @@ op_7:
 	lea rax, [rax*2+7]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_8:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -71,7 +71,7 @@ op_8:
 	lea rax, [rax*2+8]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 op_9:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -79,7 +79,7 @@ op_9:
 	lea rax, [rax*2+9]
 	mov [STACK], al
 	.tail: ret
-.end: int3
+	.end: int3
 section .data
 instr_func_init: dq op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_compile, op_nop, op_pushzero, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_add, op_input, op_sub, op_output, op_nop, op_0, op_1, op_2, op_3, op_4, op_5, op_6, op_7, op_8, op_9, op_dup, op_pushsep, op_nop, op_nop, op_nop, op_exec, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_enqueue, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_dequeue, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_log, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop
 instr_func: dq op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_compile, op_nop, op_pushzero, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_add, op_input, op_sub, op_output, op_nop, op_0, op_1, op_2, op_3, op_4, op_5, op_6, op_7, op_8, op_9, op_dup, op_pushsep, op_nop, op_nop, op_nop, op_exec, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_enqueue, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_dequeue, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_log, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop
