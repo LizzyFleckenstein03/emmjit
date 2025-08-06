@@ -7,7 +7,7 @@ global _start, instr_func, instr_info
 %define STACK_BITS 29 ; 512MiB
 %define QUEUE_BITS 24 ; 16MiB
 
-%define SAFETY 1
+%define SAFETY 0
 
 section .bss
 

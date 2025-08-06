@@ -86,8 +86,8 @@ op_compile:
     mov rdi, 1
     call [fptr.heap_alloc]
     mov byte[rax], 0xc3 ; write ret
-    mov r11, 1
-    mov r12, 0
+    mov r11, 0
+    mov r12, 1
 
 .finish:
     ; restore base ptr
