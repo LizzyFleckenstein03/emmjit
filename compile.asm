@@ -10,82 +10,75 @@ op_compile:
     movzx rbx, byte[STACK]
     inc STACK
     ; allocation size
-    xor rdi, rdi
+    xor r12, r12
     ; loop to collect func info
-    .l_prepare:
+.l_prep:
         STACK_PREPOP
         inc STACK
         ; get current symbol
         movzx rax, byte[STACK-1]
         ; check terminator
         cmp al, ';'
-        je .l_prepare_end
+        je .alloc
         ; func ptr
         mov rsi, [instr_func+rax*8]
-        ; alloc size
+        ; size
         lea rax, [rax*2]
         mov rcx, [instr_info+rax*8]
-        ; ret-tail size
-        xor r8, r8
         ; tail offset
-        mov r12, [instr_info+rax*8+8]
-        ; check if tail is ret
-        mov al, [rsi+r12]
-        cmp al, 0xc3
-        ; remove tail-ret byte
-        mov r9, 1
-        cmove r8, r9
-        sub rcx, r8
-        ; next
-        push r12 ; tail
-        push rsi  ; src
-        push rdi ; dst offset
-        push rcx ; size
-        add r12, rdi ; newfunc tail offset
-        add rdi, rcx ; add to allocation
-        jmp .l_prepare
-    .l_prepare_end:
+        mov rdx, [instr_info+rax*8+8]
+        ; skip ret-tail removal for last op
         cmp rsp, rbp
-        je .empty_func       
-            
-        ; add back removed ret-tail
-        add [rsp], r8
-        add rdi, r8
+        je .l_prep_next
+        ; check if tail is ret
+        cmp byte[rsi+rdx], 0xc3
+        jne .l_prep_next
+        ; remove ret-tail byte
+        dec rcx
+.l_prep_next:
+        add r12, rcx ; add to allocation
+        push rdx ; tail
+        push rsi ; src
+        push rcx ; size
+        jmp .l_prep
 
+.alloc:
+    ; special case for empty funcs
+    cmp rsp, rbp
+    je .empty_func
     ; allocate memory
-    push rdi
+    mov rdi, r12
     call [fptr.heap_alloc]
-    pop r8
+    ; moving pointer
+    mov rdi, rax
 
-    ; variables:
-    ; rax = newfunc ptr
-    ; r8 = newfunc size
-    ; r12 = newfunc tail offset
-
-    .l_copy:
+.l_copy:
         pop rcx ; size
-        pop rdi ; dst offset
         pop rsi ; src
-        pop r9  ; tail
-        ; add newfunc to offset
-        add rdi, rax
-        ; copy
-        push rdi
+        pop rdx ; tail
+        mov r8, rdi ; backup current ptr
+        ; copy code
         rep movsb
-        pop rdi
         ; check if done
         cmp rbp, rsp
-        je .finish
-        ; if not last, rewrite jmp to call
+        jne .l_copy_rewrite
+        ; total tail offset = item_ptr+tail-func_ptr
+        lea r11, [r8+rdx]
+        sub r11, rax
+        ; done
+        jmp .finish
+.l_copy_rewrite:
         ; check if jmp
-        cmp byte[rdi+r9], 0xff
+        cmp byte[r8+rdx], 0xff
         jne .l_copy
 %if SAFETY
-        cmp byte[rdi+r9+1], 0x24
+        ; check the byte we're changing, to be sure
+        cmp byte[r8+rdx+1], 0x24
         SAFETY_ASSERT safety_invalid_jmp, jz
 %endif
-        ; change jmp to call
-        mov byte[rdi+r9+1], 0x14
+        ; rewrite jmp to call
+        mov byte[r8+rdx+1], 0x14
+        ; continue
         jmp .l_copy
 
 .empty_func:
@@ -93,7 +86,7 @@ op_compile:
     mov rdi, 1
     call [fptr.heap_alloc]
     mov byte[rax], 0xc3 ; write ret
-    mov r8, 1
+    mov r11, 1
     mov r12, 0
 
 .finish:
@@ -107,9 +100,9 @@ op_compile:
     lea rax, [rbx*2]
     mov rsi, [instr_info+rax*8]
     ; store new info
-    mov [instr_info+rax*8], r8
+    mov [instr_info+rax*8], r12
     ; total tail ptr
-    mov [instr_info+rax*8+8], r12
+    mov [instr_info+rax*8+8], r11
     ; skip heap free if same as init
     cmp rdi, [instr_func_init+rbx*8]
     jne .tail
