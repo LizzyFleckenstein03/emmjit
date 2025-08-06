@@ -37,33 +37,6 @@ fptr:
 
 section .text
 
-init_ops:
-    ; move operators to heap
-    mov rdx, 0
-.l_move:
-    ; allocation size
-    lea rax, [rdx*2]
-    mov rdi, [instr_info+rax*8]
-
-    push rdi
-    push rdx
-    call heap_alloc
-    pop rdx
-    pop rcx
-
-    ; copy
-    mov rdi, rax
-    mov rsi, [instr_func+rdx*8]
-    rep movsb
-
-    ; overwrite old
-    mov [instr_func+rdx*8], rax
-    
-    inc rdx
-    cmp rdx, 256
-    jne .l_move
-    ret    
-
 _start:
     ; argc
     mov rcx, [rsp]
@@ -76,8 +49,6 @@ _start:
     call io_map_file
     mov rbx, rax ; pointer
     mov r12, rdx ; size
-
-    call init_ops
 
     ; rdi = r12*7+1
     lea rdi, [r12*2+r12]

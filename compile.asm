@@ -112,6 +112,9 @@ op_compile:
     mov [instr_info+rax*8], r8
     ; total tail ptr
     mov [instr_info+rax*8+8], r12
+    ; skip heap free if same as init
+    cmp rdi, [instr_func_init+rbx*8]
+    jne .tail
     call [fptr.heap_free]
     .tail: ret
     .end: int3
