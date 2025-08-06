@@ -62,7 +62,6 @@ op_compile:
     ; r8 = newfunc size
     ; r12 = newfunc tail offset
 
-    xor r8, r8
     .l_copy:
         pop rcx ; size
         pop rdi ; dst offset
@@ -82,7 +81,7 @@ op_compile:
         cmp byte[rdi+r9], 0xff
         jne .l_copy
 %if SAFETY
-        cmp word[rdi+r9+1], 0x2524
+        cmp byte[rdi+r9+1], 0x24
         SAFETY_ASSERT safety_invalid_jmp, jz
 %endif
         ; change jmp to call
@@ -100,7 +99,6 @@ op_compile:
 .finish:
     ; restore base ptr
     pop rbp
-
     ; load old ptr into arg1
     mov rdi, [instr_func+rbx*8]
     ; store new ptr
