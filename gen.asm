@@ -7,7 +7,7 @@ op_0:
 	lea rax, [rax*2+0]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_1:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -15,7 +15,7 @@ op_1:
 	lea rax, [rax*2+1]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_2:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -23,7 +23,7 @@ op_2:
 	lea rax, [rax*2+2]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_3:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -31,7 +31,7 @@ op_3:
 	lea rax, [rax*2+3]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_4:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -39,7 +39,7 @@ op_4:
 	lea rax, [rax*2+4]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_5:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -47,7 +47,7 @@ op_5:
 	lea rax, [rax*2+5]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_6:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -55,7 +55,7 @@ op_6:
 	lea rax, [rax*2+6]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_7:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -63,7 +63,7 @@ op_7:
 	lea rax, [rax*2+7]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_8:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -71,7 +71,7 @@ op_8:
 	lea rax, [rax*2+8]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 op_9:
 	STACK_PREPOP
 	movzx rax, byte[STACK]
@@ -79,7 +79,7 @@ op_9:
 	lea rax, [rax*2+9]
 	mov [STACK], al
 	.tail: ret
-.end:
+.end: int3
 section .data
 instr_func: dq op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_compile, op_nop, op_pushzero, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_add, op_input, op_sub, op_output, op_nop, op_0, op_1, op_2, op_3, op_4, op_5, op_6, op_7, op_8, op_9, op_dup, op_pushsep, op_nop, op_nop, op_nop, op_exec, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_enqueue, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_dequeue, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_log, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop, op_nop
 instr_info: dq (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_compile.end-op_compile), (op_compile.tail-op_compile), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_pushzero.end-op_pushzero), (op_pushzero.tail-op_pushzero), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_add.end-op_add), (op_add.tail-op_add), (op_input.end-op_input), (op_input.tail-op_input), (op_sub.end-op_sub), (op_sub.tail-op_sub), (op_output.end-op_output), (op_output.tail-op_output), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_0.end-op_0), (op_0.tail-op_0), (op_1.end-op_1), (op_1.tail-op_1), (op_2.end-op_2), (op_2.tail-op_2), (op_3.end-op_3), (op_3.tail-op_3), (op_4.end-op_4), (op_4.tail-op_4), (op_5.end-op_5), (op_5.tail-op_5), (op_6.end-op_6), (op_6.tail-op_6), (op_7.end-op_7), (op_7.tail-op_7), (op_8.end-op_8), (op_8.tail-op_8), (op_9.end-op_9), (op_9.tail-op_9), (op_dup.end-op_dup), (op_dup.tail-op_dup), (op_pushsep.end-op_pushsep), (op_pushsep.tail-op_pushsep), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_exec.end-op_exec), (op_exec.tail-op_exec), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_enqueue.end-op_enqueue), (op_enqueue.tail-op_enqueue), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_dequeue.end-op_dequeue), (op_dequeue.tail-op_dequeue), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_log.end-op_log), (op_log.tail-op_log), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop), (op_nop.end-op_nop), (op_nop.tail-op_nop)

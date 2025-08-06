@@ -26,7 +26,7 @@ for i = 0, 9 do
     f:write("\tlea rax, [rax*2+"..i.."]\n")
     f:write("\tmov [STACK], al\n")
     f:write("\t.tail: ret\n")
-    f:write(".end:\n")
+    f:write(".end: int3\n")
 end
 
 f:write("section .data\n")

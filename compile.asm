@@ -114,4 +114,4 @@ op_compile:
     mov [instr_info+rax*8+8], r12
     call [fptr.heap_free]
     .tail: ret
-    .end:
+    .end: int3

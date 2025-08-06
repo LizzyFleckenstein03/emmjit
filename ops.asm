@@ -2,14 +2,14 @@ section .text
 
 op_nop:
     .tail: ret
-    .end:
+    .end: int3
 
 op_pushzero:
     STACK_PREPUSH
     dec STACK
     mov byte[STACK], 0
     .tail: ret
-    .end:
+    .end: int3
 
 op_add:
     STACK_PREPOP
@@ -18,7 +18,7 @@ op_add:
     STACK_PREPOP
     add [STACK], al 
     .tail: ret
-    .end:
+    .end: int3
 
 op_sub:
     STACK_PREPOP
@@ -27,7 +27,7 @@ op_sub:
     STACK_PREPOP
     sub [STACK], al 
     .tail: ret
-    .end:
+    .end: int3
 
 op_log:
     STACK_PREPOP
@@ -39,14 +39,14 @@ op_log:
     sub cl, al
     mov [STACK], cl
     .tail: ret
-    .end:
+    .end: int3
 
 op_output:
     STACK_PREPOP
     movzx rdi, byte[STACK]
     inc STACK
     .tail: jmp [fptr.io_putchar]
-    .end:
+    .end: int3
 
 op_input:
     call [fptr.io_getchar]
@@ -54,7 +54,7 @@ op_input:
     dec STACK
     mov [STACK], al
     .tail: ret
-    .end:
+    .end: int3
 
 op_enqueue:
     STACK_PREPOP
@@ -67,7 +67,7 @@ op_enqueue:
     SAFETY_ASSERT safety_queue_overflow
 %endif
     .tail: ret
-    .end:
+    .end: int3
 
 op_dequeue:
 %if SAFETY
@@ -81,7 +81,7 @@ op_dequeue:
     dec STACK
     mov byte[STACK], al
     .tail: ret
-    .end:
+    .end: int3
 
 op_dup:
     STACK_PREPOP
@@ -90,7 +90,7 @@ op_dup:
     dec STACK
     mov [STACK], al
     .tail: ret
-    .end:
+    .end: int3
 
 op_exec:
     STACK_PREPOP
@@ -104,4 +104,4 @@ op_pushsep:
     dec STACK
     mov byte[STACK], ';'
     .tail: ret
-    .end:
+    .end: int3
