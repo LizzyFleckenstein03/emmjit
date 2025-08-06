@@ -4,9 +4,8 @@ global _start, instr_func, instr_info
 %define QUEUE_W r14
 %define QUEUE_R r15
 
-; 16MB each
-%define STACK_BITS 29
-%define QUEUE_BITS 24
+%define STACK_BITS 29 ; 512MiB
+%define QUEUE_BITS 24 ; 16MiB
 
 %define SAFETY 1
 
