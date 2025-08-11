@@ -1,64 +1,64 @@
 section .text
 
 op_nop:
-    .tail: ret
-    .end: int3
+    ret
+.end: int3
+%define FLAGS_op_nop 0
 
 op_pushzero:
-    STACK_PREPUSH
-    dec STACK
-    mov byte[STACK], 0
-    .tail: ret
-    .end: int3
+    xor rax, rax
+    STACK_PUSH
+    ret
+.end: int3
+%define FLAGS_op_pushzero FLAG_PUSH
 
 op_add:
+    STACK_POP
     STACK_PREPOP
-    mov al, [STACK]
-    inc STACK
-    STACK_PREPOP
-    add [STACK], al 
-    .tail: ret
-    .end: int3
+    add al, [STACK]
+    STACK_SETTOP
+    ret
+.end: int3
+%define FLAGS_op_add FLAG_POP | FLAG_SETTOP
 
 op_sub:
+    STACK_POP
     STACK_PREPOP
-    mov al, [STACK]
-    inc STACK
-    STACK_PREPOP
-    sub [STACK], al 
-    .tail: ret
-    .end: int3
+    neg al
+    add al, [STACK]
+    STACK_SETTOP
+    ret
+.end: int3
+%define FLAGS_op_sub FLAG_POP | FLAG_SETTOP
 
 op_log:
-    STACK_PREPOP
-    movzx ax, byte[STACK]
-    lzcnt ax, ax
+    STACK_GETTOP
     mov cx, 7
-    cmovc ax, cx
-    mov cl, 16
-    sub cl, al
-    mov [STACK], cl
-    .tail: ret
-    .end: int3
+    lzcnt ax, ax
+    cmovnc cx, ax
+    mov al, 15
+    sub al, cl
+    STACK_SETTOP
+    ret
+.end: int3
+%define FLAGS_op_log FLAG_GETTOP | FLAG_SETTOP
 
 op_output:
-    STACK_PREPOP
-    movzx rdi, byte[STACK]
-    inc STACK
-    .tail: jmp [fptr.io_putchar]
-    .end: int3
+    STACK_POP
+    mov rdi, rax
+    jmp [fptr.io_putchar]
+.end: int3
+%define FLAGS_op_output FLAG_POP | FLAG_JMP
 
 op_input:
     call [fptr.io_getchar]
-    STACK_PREPUSH
-    dec STACK
-    mov [STACK], al
-    .tail: ret
-    .end: int3
+    STACK_PUSH
+    ret
+.end: int3
+%define FLAGS_op_input FLAG_PUSH
 
 op_enqueue:
-    STACK_PREPOP
-    mov al, [STACK]
+    STACK_GETTOP
     mov [queue+QUEUE_W], al
     inc QUEUE_W
     and QUEUE_W, ~((~0)<<QUEUE_BITS)
@@ -66,42 +66,89 @@ op_enqueue:
     cmp QUEUE_R, QUEUE_W
     SAFETY_ASSERT safety_queue_overflow
 %endif
-    .tail: ret
-    .end: int3
+    ret
+.end: int3
+%define FLAGS_op_enqueue FLAG_GETTOP
 
 op_dequeue:
 %if SAFETY
     cmp QUEUE_R, QUEUE_W
     SAFETY_ASSERT safety_queue_underflow
 %endif
-    mov al, [queue+QUEUE_R]
+    movzx rax, byte[queue+QUEUE_R]
     inc QUEUE_R
     and QUEUE_R, ~((~0)<<QUEUE_BITS)
-    STACK_PREPUSH
-    dec STACK
-    mov byte[STACK], al
-    .tail: ret
-    .end: int3
+    STACK_PUSH
+    ret
+.end: int3
+%define FLAGS_op_dequeue FLAG_PUSH
 
 op_dup:
-    STACK_PREPOP
-    mov al, [STACK]
-    STACK_PREPUSH
-    dec STACK
-    mov [STACK], al
-    .tail: ret
-    .end: int3
+    STACK_GETTOP
+    STACK_PUSH
+    ret
+.end: int3
+%define FLAGS_op_dup FLAG_GETTOP | FLAG_PUSH
+
+op_compile:
+    ; initial symbol
+    STACK_POP
+    mov rbx, rax
+    ; find separator
+    mov rdx, stack.end
+    sub rdx, STACK
+    mov rcx, rdx
+    mov al, ';'
+    mov rdi, STACK
+    repne scasb
+    sub rdx, rcx 
+%if SAFETY
+    SAFETY_ASSERT safety_missing_sep
+%endif
+    ; compile args
+    mov rdi, STACK
+    lea rsi, [rdx-1]
+    ; pop program from stack
+    add STACK, rdx
+    ; compile
+    call [fptr.compile]
+    ; load old func into arg
+    mov rdi, [instr_func+rbx*8]
+    ; store new func
+    mov [instr_func+rbx*8], rax
+    mov [instr_info+rbx*8], rdx
+    ; skip heap free for initial ops
+    cmp rdi, [instr_func_init+rbx*8]
+    je .nofree
+    ; free
+    call [fptr.heap_release]
+.nofree:
+    ret
+.end: int3
+%define FLAGS_op_compile FLAG_POP | FLAG_INHERIT_REFCOUNT
+
+%if TRACE
 
 op_exec:
-    STACK_PREPOP
-    movzx rax, byte[STACK]
-    inc STACK
-    .tail: jmp [instr_func+rax*8]
-    .end:
+    STACK_POP
+    call [instr_func+rax*8]
+    ret
+.end: int3
+%define FLAGS_op_exec FLAG_POP
+
+%else ; no TRACE
+
+op_exec:
+    STACK_POP
+    jmp [instr_func+rax*8]
+.end: int3
+%define FLAGS_op_exec FLAG_POP | FLAG_JMP | FLAG_INHERIT_REFCOUNT
+
+%endif ; TRACE
 
 op_pushsep:
-    STACK_PREPUSH
-    dec STACK
-    mov byte[STACK], ';'
-    .tail: ret
-    .end: int3
+    mov rax, ';'
+    STACK_PUSH
+    ret
+.end: int3
+%define FLAGS_op_pushsep FLAG_PUSH

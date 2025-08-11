@@ -26,3 +26,22 @@ heap_free:
     mov rax, SYS_munmap
     syscall
     ret
+
+heap_new:
+    add rdi, 16
+    push rdi
+    call heap_alloc
+    pop rdi
+    mov qword[rax+0], 1   ; refcount
+    mov qword[rax+8], rdi ; size
+    add rax, 16
+    ret
+
+heap_release:
+    ret ; temporary
+    lea rdi, [rdi-16]
+    dec qword[rdi]
+    jnz .done
+    jmp heap_free
+.done:
+    ret

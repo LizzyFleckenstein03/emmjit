@@ -1,46 +1,22 @@
-section .text
-
+%define SIZE_SAFETY_ASSERT 2+1+7
 %macro SAFETY_ASSERT 1-2 jnz
-    %2 $+2+7+1
-    int1
+    %2 $+SIZE_SAFETY_ASSERT
+    int3
     call [fptr.%1]
 %endmacro
 
-%macro STACK_PREPUSH 0
-%if SAFETY
-    cmp STACK, stack
-    SAFETY_ASSERT safety_stack_overflow
-%endif
+%macro SAFETY_COND 2
+%1:
+    mov rdi, .msg
+    jmp io_error
+.msg: db %2,10,0
 %endmacro
 
-%macro STACK_PREPOP 0
-%if SAFETY
-    cmp STACK, stack.end
-    SAFETY_ASSERT safety_stack_underflow
-%endif
-%endmacro
-
-safety_stack_overflow:
-    mov rdi, .msg
-    jmp io_error
-.msg: db "stack overflow",10,0
-
-safety_stack_underflow:
-    mov rdi, .msg
-    jmp io_error
-.msg: db "stack underflow",10,0
-
-safety_queue_overflow:
-    mov rdi, .msg
-    jmp io_error
-.msg: db "queue overflow",10,0
-
-safety_queue_underflow:
-    mov rdi, .msg
-    jmp io_error
-.msg: db "queue underflow",10,0
-
-safety_invalid_jmp:
-    mov rdi, .msg
-    jmp io_error
-.msg: db "unsupported jump instruction while compiling",10,0
+section .text
+SAFETY_COND safety_stack_overflow, "stack overflow"
+SAFETY_COND safety_stack_underflow, "stack underflow"
+SAFETY_COND safety_queue_overflow, "queue overflow"
+SAFETY_COND safety_queue_underflow, "queue underflow"
+SAFETY_COND safety_invalid_jmp, "unsupported jump instruction while compiling"
+SAFETY_COND safety_missing_sep, "missing stack separator while compiling"
+SAFETY_COND safety_func_size, "function must not be larger than 4GiB"

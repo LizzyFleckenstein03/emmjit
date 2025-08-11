@@ -20,13 +20,13 @@ f:write("section .text\n")
 for i = 0, 9 do
     builtin[tostring(i)] = tostring(i)
     f:write("op_"..i..":\n")
-    f:write("\tSTACK_PREPOP\n")
-    f:write("\tmovzx rax, byte[STACK]\n")
+    f:write("\tSTACK_GETTOP\n")
     f:write("\tlea rax, [rax*4+rax]\n")
     f:write("\tlea rax, [rax*2+"..i.."]\n")
-    f:write("\tmov [STACK], al\n")
-    f:write("\t.tail: ret\n")
-    f:write("\t.end: int3\n")
+    f:write("\tSTACK_SETTOP\n")
+    f:write("\tret\n")
+    f:write(".end: int3\n")
+    f:write("%define FLAGS_op_"..i.." FLAG_GETTOP | FLAG_SETTOP\n")
 end
 
 f:write("section .data\n")
@@ -40,12 +40,12 @@ funcs = funcs.."\n"
 f:write("instr_func_init: dq " .. funcs)
 f:write("instr_func: dq " .. funcs)
 
-f:write("instr_info: dq ")
+f:write("instr_info: dd ")
 for i = 0, 255 do
     local op = "op_"..(builtin[string.char(i)] or "nop")
     f:write(
-        "("..op..".end-"..op.."), ".. -- size
-        "("..op..".tail-"..op..")".. -- tail offset
+        "FLAGS_"..op..",  ".. -- flags
+        "("..op..".end-"..op..")".. -- size
         (i==255 and "" or ", "))
 end
 f:write("\n")

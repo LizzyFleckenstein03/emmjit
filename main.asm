@@ -1,4 +1,7 @@
-global _start, instr_func, instr_info
+global _start
+
+%define SAFETY 1
+%define TRACE 1
 
 %define STACK r13
 %define QUEUE_W r14
@@ -7,7 +10,21 @@ global _start, instr_func, instr_info
 %define STACK_BITS 29 ; 512MiB
 %define QUEUE_BITS 24 ; 16MiB
 
-%define SAFETY 0
+%define SIZE_JMP 7
+%define SIZE_RET 1
+
+; start: nop or pop or gettop
+%define FLAG_POP (1<<0)
+%define FLAG_GETTOP (1<<1)
+
+; end: ret or jmp or push or settop
+%define FLAG_JMP (1<<2)
+%define FLAG_PUSH (1<<3)
+%define FLAG_SETTOP (1<<4)
+
+; additional
+%define FLAG_INHERIT_REFCOUNT (1<<5)
+%define FLAG_REFCOUNT (1<<6)
 
 section .bss
 
@@ -15,24 +32,29 @@ stack: resb (1<<STACK_BITS)
 .end:
 queue: resb (1<<QUEUE_BITS)
 
-section .text
-
-%include "const.asm"
-%include "io.asm"
-%include "heap.asm"
-
 section .data
 
 fptr:
     .io_putchar: dq io_putchar
     .io_getchar: dq io_getchar
-    .heap_alloc: dq heap_alloc
-    .heap_free: dq heap_free
+    .heap_release: dq heap_release
+    .compile: dq compile
     .safety_stack_overflow: dq safety_stack_overflow
     .safety_stack_underflow: dq safety_stack_underflow
     .safety_queue_overflow: dq safety_queue_overflow
     .safety_queue_underflow: dq safety_queue_underflow
+    .safety_func_size: dq safety_func_size
     .safety_invalid_jmp: dq safety_invalid_jmp
+    .safety_missing_sep: dq safety_missing_sep
+
+%include "const.asm"
+%include "io.asm"
+%include "safety.asm"
+%include "heap.asm"
+%include "stack.asm"
+%include "compile.asm"
+%include "ops.asm"
+%include "gen.asm"
 
 section .text
 
@@ -101,8 +123,3 @@ _start:
     jmp io_error
 
 .argc_err_msg: db "not enough arguments",10,0
-
-%include "safety.asm"
-%include "ops.asm"
-%include "compile.asm"
-%include "gen.asm"
