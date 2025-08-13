@@ -42,19 +42,19 @@ compile:
     shr r11, 32
 
     test r8, FLAG_REFCOUNT
-    jz .l_inherit_refcount
+    jz .l_prep_refcount_flags
 
     add rdx, SIZE_REFCOUNT_HEAD
     sub r11, SIZE_REFCOUNT_HEAD+SIZE_REFCOUNT_TAIL
 
-.l_inherit_refcount:
+.l_prep_refcount_flags:
     ; inherit refcount
     test r8, FLAG_INHERIT_REFCOUNT
-    jz .l_prep_check_head
+    jz .l_prep_head_flags
 
     or r12, FLAG_REFCOUNT|FLAG_INHERIT_REFCOUNT
 
-.l_prep_check_head:
+.l_prep_head_flags:
     ; check if head
     cmp r10, rsi
     jne .l_prep_headopt
@@ -65,7 +65,7 @@ compile:
     or r12, rax
 
     ; don't run headopt
-    jmp .l_prep_check_tail
+    jmp .l_prep_tailopt
 
 .l_prep_headopt:
     ; load nextinfo
@@ -83,14 +83,14 @@ compile:
     add rdx, SIZE_STACK_GETTOP
     sub r11, SIZE_STACK_GETTOP
 
-    jmp .l_prep_check_tail
+    jmp .l_prep_tailopt
 
 .l_prep_headopt_pop:
     ; next for current pop and pred push
     test r8, FLAG_POP
-    jz .l_prep_check_tail
+    jz .l_prep_tailopt
     test r9, FLAG_PUSH
-    jz .l_prep_check_tail
+    jz .l_prep_tailopt
 
     ; remove pop
     add rdx, SIZE_STACK_POP
@@ -98,16 +98,6 @@ compile:
 
     ; and remember to remove push
     or ch, (1<<1)
-
-.l_prep_check_tail:
-    ; check if tail
-    cmp r10, 1
-    jne .l_prep_tailopt
-
-    ; copy tail flags
-    mov rax, r8
-    and rax, FLAG_JMP|FLAG_SETTOP|FLAG_PUSH
-    or r12, rax
 
 .l_prep_tailopt:
     test r8, FLAG_JMP
@@ -117,13 +107,9 @@ compile:
     mov rax, 1<<32
     or r11, rax
 
-    jmp .l_prep_next
+    jmp .l_prep_tail_flags
 
 .l_prep_tailopt_push:
-    ; don't run tailopt for tail
-    cmp r10, 1
-    je .l_prep_next
-
     test ch, 1
     jz .l_prep_tailopt_ret
 
@@ -131,8 +117,21 @@ compile:
     sub r11, SIZE_STACK_PUSH
 
 .l_prep_tailopt_ret:
+    test r8, FLAG_REFCOUNT
+    jnz .l_prep_tail_flags
+
     ; remove ret
     sub r11, SIZE_RET
+
+.l_prep_tail_flags:
+    ; check if tail
+    cmp r10, 1
+    jne .l_prep_next
+
+    ; copy tail flags
+    mov rax, r8
+    and rax, FLAG_JMP|FLAG_SETTOP|FLAG_PUSH
+    or r12, rax
 
 .l_prep_next:
     push rdx ; src
@@ -158,9 +157,20 @@ compile:
 
 .l_prep_finish:
     test r12, FLAG_REFCOUNT
-    jz .alloc
+    jz .alloc_addret
 
     mov rax, (SIZE_REFCOUNT_HEAD+SIZE_REFCOUNT_TAIL) << 32
+    add r12, rax
+%if SAFETY
+    ; check for overflow
+    SAFETY_ASSERT safety_func_size, jnc
+%endif
+    jmp .alloc
+
+.alloc_addret:
+    test r12, FLAG_JMP
+    jnz .alloc
+    mov rax, 1 << 32
     add r12, rax
 %if SAFETY
     ; check for overflow
@@ -222,13 +232,20 @@ compile:
 
 .finish:
     test r12, FLAG_REFCOUNT
-    jz .done
+    jz .addret
 
     ; write refcount tail
     mov word[rdi], 0xbf48  ; movabs rdi, ...
     mov qword[rdi+2], rax
     mov dword[rdi+2+8], 0x2524ff ; jmp abs
     mov dword[rdi+2+8+3], fptr.heap_release
+    jmp .done
+
+.addret:
+    test r12, FLAG_JMP
+    jnz .done
+
+    mov byte[rdi], 0xc3
 
 .done:
     xor rbp, rbp
