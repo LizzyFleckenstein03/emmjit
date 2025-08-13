@@ -38,9 +38,9 @@
 
 %macro STACK_GETTOP 0
     STACK_PREPOP
-    movzx rax, byte[STACK]
+    mov al, [STACK]
 %endmacro
-%define SIZE_STACK_GETTOP SIZE_STACK_PREPOP+5
+%define SIZE_STACK_GETTOP SIZE_STACK_PREPOP+4
 
 %macro STACK_POP 0
     STACK_GETTOP

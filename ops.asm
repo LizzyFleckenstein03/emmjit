@@ -6,7 +6,7 @@ op_nop:
 %define FLAGS_op_nop 0
 
 op_pushzero:
-    xor rax, rax
+    xor al, al
     STACK_PUSH
     ret
 .end: int3
@@ -33,6 +33,7 @@ op_sub:
 
 op_log:
     STACK_GETTOP
+    movzx ax, al
     mov cx, 7
     lzcnt ax, ax
     cmovnc cx, ax
@@ -45,7 +46,7 @@ op_log:
 
 op_output:
     STACK_POP
-    mov rdi, rax
+    mov dil, al
     ; don't jmp because rdi might get overwritten
     call [fptr.io_putchar]
     ret
@@ -77,7 +78,7 @@ op_dequeue:
     cmp QUEUE_R, QUEUE_W
     SAFETY_ASSERT safety_queue_underflow
 %endif
-    movzx rax, byte[queue+QUEUE_R]
+    mov al, byte[queue+QUEUE_R]
     inc QUEUE_R
     and QUEUE_R, ~((~0)<<QUEUE_BITS)
     STACK_PUSH
@@ -95,7 +96,7 @@ op_dup:
 op_compile:
     ; initial symbol
     STACK_POP
-    mov rbx, rax
+    movzx rbx, al
     ; find separator
     mov rdx, stack.end
     sub rdx, STACK
@@ -133,6 +134,7 @@ op_compile:
 
 op_exec:
     STACK_POP
+    movzx rax, al
     call [instr_func+rax*8]
     ret
 .end: int3
@@ -142,6 +144,7 @@ op_exec:
 
 op_exec:
     STACK_POP
+    movzx rax, al
     jmp [instr_func+rax*8]
 .end: int3
 %define FLAGS_op_exec FLAG_POP | FLAG_JMP | FLAG_INHERIT_REFCOUNT
@@ -149,7 +152,7 @@ op_exec:
 %endif ; TRACE
 
 op_pushsep:
-    mov rax, ';'
+    mov al, ';'
     STACK_PUSH
     ret
 .end: int3
