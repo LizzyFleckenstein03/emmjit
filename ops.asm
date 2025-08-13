@@ -46,9 +46,11 @@ op_log:
 op_output:
     STACK_POP
     mov rdi, rax
-    jmp [fptr.io_putchar]
+    ; don't jmp because rdi might get overwritten
+    call [fptr.io_putchar]
+    ret
 .end: int3
-%define FLAGS_op_output FLAG_POP | FLAG_JMP
+%define FLAGS_op_output FLAG_POP
 
 op_input:
     call [fptr.io_getchar]

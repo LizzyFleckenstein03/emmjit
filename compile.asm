@@ -1,5 +1,11 @@
 section .text
 
+%define SIZE_JMP 7
+%define SIZE_RET 1
+
+%define SIZE_REFCOUNT_HEAD 10+3 ; movabs imm64 + inc
+%define SIZE_REFCOUNT_TAIL 10+7 ; movabs imm64 + jmp
+
 ; in rdi program (reversed)
 ; in rsi program size
 ; out rax newfunc ptr
@@ -34,6 +40,19 @@ compile:
     mov rdx, [instr_func+8*rax]
     mov r11, r8
     shr r11, 32
+
+    test r8, FLAG_REFCOUNT
+    jz .l_inherit_refcount
+
+    add rdx, SIZE_REFCOUNT_HEAD
+    sub r11, SIZE_REFCOUNT_HEAD+SIZE_REFCOUNT_TAIL
+
+.l_inherit_refcount:
+    ; inherit refcount
+    test r8, FLAG_INHERIT_REFCOUNT
+    jz .l_prep_check_head
+
+    or r12, FLAG_REFCOUNT|FLAG_INHERIT_REFCOUNT
 
 .l_prep_check_head:
     ; check if head
@@ -90,18 +109,21 @@ compile:
     and rax, FLAG_JMP|FLAG_SETTOP|FLAG_PUSH
     or r12, rax
 
-    ; dont run tailopt
-    jmp .l_prep_next
 .l_prep_tailopt:
     test r8, FLAG_JMP
     jz .l_prep_tailopt_push
 
     ; set rewritejmp flag
-    mov rax, (1<<32)
+    mov rax, 1<<32
     or r11, rax
 
     jmp .l_prep_next
+
 .l_prep_tailopt_push:
+    ; don't run tailopt for tail
+    cmp r10, 1
+    je .l_prep_next
+
     test ch, 1
     jz .l_prep_tailopt_ret
 
@@ -126,13 +148,24 @@ compile:
 
     ; exit condition
     cmp r10, rsi
-    je .alloc
+    je .l_prep_finish
 
     ; next
     inc r10
     shr ch, 1
     mov r8, r9
     jmp .l_prep
+
+.l_prep_finish:
+    test r12, FLAG_REFCOUNT
+    jz .alloc
+
+    mov rax, (SIZE_REFCOUNT_HEAD+SIZE_REFCOUNT_TAIL) << 32
+    add r12, rax
+%if SAFETY
+    ; check for overflow
+    SAFETY_ASSERT safety_func_size, jnc
+%endif
 
 .alloc:
     mov rdi, r12
@@ -145,28 +178,60 @@ compile:
     ; rewritejmp bit
     mov r8, 1 << 32
 
+    test r12, FLAG_REFCOUNT
+    jz .l_copy
+
+    ; write refcount head
+    mov word[rdi], 0xbf48  ; movabs rdi, ...
+    lea rdx, [rax-16]      ; refcount value is at -16
+    mov qword[rdi+2], rdx
+    mov dword[rdi+2+8], 0x07ff48 ; inc qword[rdi]
+    add rdi, SIZE_REFCOUNT_HEAD
+
 .l_copy:
     pop rdx ; len + flag
     pop rsi ; src
     mov ecx, edx ; len
     ; copy code
     rep movsb
-    ; exit if done
-    cmp rbp, rsp
-    je .finish
     ; check for rewritejmp bit
     test rdx, r8
-    jz .l_copy
+    jz .l_copy_next
+    ; rewrite to call
+    mov dl, 0x14
+    ; check if last
+    cmp rsp, rbp
+    jne .l_copy_rewrite
+    ; check if refcounted
+    test r12, FLAG_REFCOUNT
+    jz .finish
+    ; rewrite to push
+    mov dl, 0x34
+.l_copy_rewrite:
 %if SAFETY
     ; verify start of jmp instruction
-    cmp word[rdi-SIZE_JMP], 0x24ff
-    SAFETY_ASSERT safety_invalid_jmp, je
+    ; this may be either jmp or push now? i think?
+    ; cmp word[rdi-SIZE_JMP], 0x24ff
+    ; SAFETY_ASSERT safety_invalid_jmp, je
 %endif
-    ; rewrite jmp to call
-    mov byte[rdi-SIZE_JMP+1], 0x14
-    jmp .l_copy
+    mov [rdi-SIZE_JMP+1], dl
+.l_copy_next:
+    ; exit if done
+    cmp rsp, rbp
+    jne .l_copy
 
 .finish:
+    test r12, FLAG_REFCOUNT
+    jz .done
+
+    ; write refcount tail
+    mov word[rdi], 0xbf48  ; movabs rdi, ...
+    mov qword[rdi+2], rax
+    mov dword[rdi+2+8], 0x2524ff ; jmp abs
+    mov dword[rdi+2+8+3], fptr.heap_release
+
+.done:
+    xor rbp, rbp
     mov rdx, r12
     ret
 

@@ -38,10 +38,10 @@ heap_new:
     ret
 
 heap_release:
-    ret ; temporary
-    lea rdi, [rdi-16]
-    dec qword[rdi]
+    dec qword[rdi-16]
     jnz .done
+    lea rdi, [rdi-16]
+    mov rsi, [rdi+8]
     jmp heap_free
 .done:
     ret

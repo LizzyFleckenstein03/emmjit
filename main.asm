@@ -1,7 +1,7 @@
 global _start
 
-%define SAFETY 1
-%define TRACE 1
+%define SAFETY 0
+%define TRACE 0
 
 %define STACK r13
 %define QUEUE_W r14
@@ -9,9 +9,6 @@ global _start
 
 %define STACK_BITS 29 ; 512MiB
 %define QUEUE_BITS 24 ; 16MiB
-
-%define SIZE_JMP 7
-%define SIZE_RET 1
 
 ; start: nop or pop or gettop
 %define FLAG_POP (1<<0)
@@ -107,6 +104,7 @@ _start:
     ; write ret
     mov byte[rax], 0xc3
 
+.run:
     ; set up storage
     mov STACK, stack.end
     xor QUEUE_W, QUEUE_W
