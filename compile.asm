@@ -193,7 +193,7 @@ compile:
 
     ; write refcount head
     mov word[rdi], 0xbf48  ; movabs rdi, ...
-    lea rdx, [rax-16]      ; refcount value is at -16
+    lea rdx, [rax-8]       ; refcount value is at -8
     mov qword[rdi+2], rdx
     mov dword[rdi+2+8], 0x07ff48 ; inc qword[rdi]
     add rdi, SIZE_REFCOUNT_HEAD
