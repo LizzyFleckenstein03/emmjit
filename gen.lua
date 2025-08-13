@@ -20,13 +20,13 @@ f:write("section .text\n")
 for i = 0, 9 do
     builtin[tostring(i)] = tostring(i)
     f:write("op_"..i..":\n")
-    f:write("\tSTACK_GETTOP\n")
+    f:write("\tSTACK_POP\n")
     f:write("\tlea rax, [rax*4+rax]\n")
     f:write("\tlea rax, [rax*2+"..i.."]\n")
-    f:write("\tSTACK_SETTOP\n")
+    f:write("\tSTACK_PUSH\n")
     f:write("\tret\n")
     f:write(".end: int3\n")
-    f:write("%define FLAGS_op_"..i.." FLAG_GETTOP | FLAG_SETTOP\n")
+    f:write("%define FLAGS_op_"..i.." FLAG_POP | FLAG_PUSH\n")
 end
 
 f:write("section .data\n")

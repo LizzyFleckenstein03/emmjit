@@ -14,35 +14,36 @@ op_pushzero:
 
 op_add:
     STACK_POP
-    STACK_PREPOP
-    add al, [STACK]
-    STACK_SETTOP
+    mov cl, al
+    STACK_POP
+    add al, cl
+    STACK_PUSH
     ret
 .end: int3
-%define FLAGS_op_add FLAG_POP | FLAG_SETTOP
+%define FLAGS_op_add FLAG_POP | FLAG_PUSH
 
 op_sub:
     STACK_POP
-    STACK_PREPOP
-    neg al
-    add al, [STACK]
-    STACK_SETTOP
+    mov cl, al
+    STACK_POP
+    sub al, cl
+    STACK_PUSH
     ret
 .end: int3
-%define FLAGS_op_sub FLAG_POP | FLAG_SETTOP
+%define FLAGS_op_sub FLAG_POP | FLAG_PUSH
 
 op_log:
-    STACK_GETTOP
+    STACK_POP
     movzx ax, al
     mov cx, 7
     lzcnt ax, ax
     cmovnc cx, ax
     mov al, 15
     sub al, cl
-    STACK_SETTOP
+    STACK_PUSH
     ret
 .end: int3
-%define FLAGS_op_log FLAG_GETTOP | FLAG_SETTOP
+%define FLAGS_op_log FLAG_POP | FLAG_PUSH
 
 op_output:
     STACK_POP
